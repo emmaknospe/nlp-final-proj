@@ -27,3 +27,18 @@ def evaluate_b3(doc, response):
     else:
         f1 = (2 * precision * recall) / (precision + recall)
     return precision, recall, f1
+
+
+def get_avg_metrics(data, method, config, limit=100):
+    precisions = []
+    recalls = []
+    f1s = []
+    for doc in data[0:limit]:
+        precision, recall, f1 = evaluate_b3(doc, method(doc, **config))
+        precisions.append(precision)
+        recalls.append(recall)
+        f1s.append(f1)
+    precision_avg = sum(precisions) / len(precisions)
+    recall_avg = sum(recalls) / len(recalls)
+    f1s_avg = sum(f1s) / len(f1s)
+    return precision_avg, recall_avg, f1s_avg

@@ -8,10 +8,12 @@ def extract_mentions(doc):
     return list(mentions)
 
 
-def load(filename, mention_method="extract"):
+def load(filename, mention_method="extract", limit=100):
     with open(filename) as file:
         docs = []
-        for doc in file:
+        for i, doc in enumerate(file):
+            if i >= limit:
+                break
             doc = json.loads(doc)
             sentences = doc['sentences']
             answers = doc['mention_clusters']
