@@ -1,4 +1,5 @@
 from load import Document
+import tqdm
 
 
 def get_intersection_size(cluster1, cluster2):
@@ -29,11 +30,15 @@ def evaluate_b3(doc, response):
     return precision, recall, f1
 
 
-def get_avg_metrics(data, method, config, limit=100):
+def get_avg_metrics(data, method, config, limit=100, verbose=True):
     precisions = []
     recalls = []
     f1s = []
-    for doc in data[0:limit]:
+    if verbose:
+        iterator = tqdm.tqdm(data[0:limit])
+    else:
+        iterator = data[0:limit]
+    for doc in iterator:
         precision, recall, f1 = evaluate_b3(doc, method(doc, **config))
         precisions.append(precision)
         recalls.append(recall)

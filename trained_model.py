@@ -11,6 +11,13 @@ def get_mention_as_list(doc, mention):
     return doc.sentences[mention[0]][mention[1]:mention[2]]
 
 
+def either_mention_contains_any_of(mention1_list, mention2_list, tokens):
+    for token in tokens:
+        if token in mention1_list or token in mention2_list:
+            return True
+    return False
+
+
 def get_feature_vector(mention1, mention2, doc):
     vector = [0 for _ in range(7)]
     mention1_str = get_mention_as_str(doc, mention1)
@@ -54,7 +61,11 @@ def get_feature_vector(mention1, mention2, doc):
 def get_lr_model(docs, verbose=True):
     vectors = []
     target = []
-    for doc in tqdm.tqdm(docs):
+    if verbose:
+        iterator = tqdm.tqdm(docs)
+    else:
+        iterator = docs
+    for doc in iterator:
         assert isinstance(doc, Document)
         values = defaultdict(lambda: defaultdict(bool))
         for cluster in doc.real_coreferences:
@@ -68,7 +79,7 @@ def get_lr_model(docs, verbose=True):
 
     if verbose:
         print("Fitting model...")
-    model = LogisticRegression()
+    model = LogisticRegression(solver="liblinear")
     model.fit(vectors, target)
     if verbose:
         print("Model fitted.")
