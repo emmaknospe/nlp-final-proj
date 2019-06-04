@@ -1,4 +1,3 @@
-from display import display_coreferences
 from load import load
 from baselines import model_all_mentions_paired, model_all_mentions_unpaired
 from evaluate import get_avg_metrics
